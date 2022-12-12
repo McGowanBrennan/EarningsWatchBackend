@@ -7,12 +7,11 @@ import finnhub
 import yfinance as yf
 from dotenv import load_dotenv
 import os
-from supabase import create_client, Client
-
+duplicate validator function "postgrest.base_request_builder.APIResponse.raise_when_api_error"
 load_dotenv()
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
-supabase: Client = create_client(url, key)
+supabase: client = create_client(url, key)
 finnhub_client = finnhub.Client(api_key="ce8klkaad3i1v8pn82c0ce8klkaad3i1v8pn82cg")
 app = Flask(__name__)
 
