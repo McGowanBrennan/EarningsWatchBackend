@@ -1,17 +1,19 @@
 import datetime
-
+from flask_socketio import SocketIO
+import websocket
 import flask
+import pandas as pd
 from flask import Flask
 from pandas_datareader import data
 import finnhub
 import yfinance as yf
 from dotenv import load_dotenv
 import os
-duplicate validator function "postgrest.base_request_builder.APIResponse.raise_when_api_error"
+from supabase import create_client, Client
 load_dotenv()
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
-supabase: client = create_client(url, key)
+supabase: Client = create_client(url, key)
 finnhub_client = finnhub.Client(api_key="ce8klkaad3i1v8pn82c0ce8klkaad3i1v8pn82cg")
 app = Flask(__name__)
 
@@ -33,10 +35,27 @@ def index():
     return "hello wewda!"
 
 
+@app.route("/sayHello")
+def say_hello():
+    return "hello"
+
+
+@app.route("/getDailyImpliedMove")
+def get_daily_implied_move():
+    adbe = yf.Ticker("ADBE")
+    print(adbe.options)
+    print(adbe.option_chain(adbe.options[0]).calls)
+    print(type(adbe.option_chain(adbe.options[0]).calls))
+    df = adbe.option_chain(adbe.options[0]).calls
+    print(df.head())
+    return "OPTIONS"
+
+
+
 @app.route("/getLargestEarnings")
-def getLargestEarnings():
+def get_largest_earnings():
     compiled_earnings = {}
-    for i in range(0, 5):
+    for i in range(0, 2):
         day_dict = {}
         premarket = supabase.table("Earnings").select("*").eq("date", str(i)).eq("hour", "bmo").order("cap",
                                                                                                       desc=True).limit(
@@ -61,6 +80,13 @@ def getLargestEarnings():
             day_dict["Friday"] = all_sessions
             compiled_earnings[4] = day_dict
     return compiled_earnings
+
+
+# @app.route("/getLargestEarningsQuotes")
+# def get_quotes():
+#     return on_message()
+
+
 
 
 class EarningsData:
