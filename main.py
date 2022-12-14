@@ -1,18 +1,12 @@
 import datetime
-from flask_socketio import SocketIO
-import websocket
-import flask
-import pandas as pd
-from flask import Flask
-from supabase import create_client, Client
-import flask
+
 from flask import Flask, jsonify
-from pandas_datareader import data
 import finnhub
 import yfinance as yf
 from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
+import pandas as pd
 load_dotenv()
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
